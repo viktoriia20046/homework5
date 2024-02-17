@@ -43,3 +43,36 @@ total_income = sum_profit(text, generator_numbers)
 print(f"Загальний дохід: {total_income}")
 
 
+#завдання 4
+
+def input_error(func):
+    def inner(*args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        except KeyError:
+            return "Please provide valid input."
+        except ValueError:
+            return "Invalid input format. Please try again."
+        except IndexError:
+            return "Index out of range. Please try again."
+    return inner
+
+@input_error
+def add_contact(args, contacts):
+    name, phone = args
+    contacts[name] = phone
+    return "Contact added."
+
+@input_error
+def search_contact(name, contacts):
+    if name in contacts:
+        return f"Phone number for {name}: {contacts[name]}"
+    else:
+        return f"{name} not found in contacts."
+
+@input_error
+def display_all_contacts(contacts):
+    if contacts:
+        return "\n".join([f"{name}: {contacts[name]}" for name in contacts])
+    else:
+        return "No contacts available."
