@@ -43,19 +43,22 @@ total_income = sum_profit(text, generator_numbers)
 print(f"Загальний дохід: {total_income}")
 
 
-#завдання 4
-
 def input_error(func):
     def inner(*args, **kwargs):
         try:
             return func(*args, **kwargs)
-        except KeyError:
-            return "Please provide valid input."
         except ValueError:
-            return "Invalid input format. Please try again."
+            return "Give me name and phone please."
+        except KeyError:
+            return "Invalid command or contact name."
         except IndexError:
-            return "Index out of range. Please try again."
+            return "Invalid number of arguments."
+
     return inner
+
+contacts = {}
+
+# Завдання 4
 
 @input_error
 def add_contact(args, contacts):
@@ -64,15 +67,51 @@ def add_contact(args, contacts):
     return "Contact added."
 
 @input_error
-def search_contact(name, contacts):
-    if name in contacts:
-        return f"Phone number for {name}: {contacts[name]}"
-    else:
-        return f"{name} not found in contacts."
+def get_contact(args, contacts):
+    name = args[0]
+    return contacts.get(name, "Contact not found.")
 
 @input_error
-def display_all_contacts(contacts):
-    if contacts:
-        return "\n".join([f"{name}: {contacts[name]}" for name in contacts])
+def remove_contact(args, contacts):
+    name = args[0]
+    if name in contacts:
+        del contacts[name]
+        return "Contact removed."
     else:
+        return "Contact not found."
+
+def list_all_contacts(contacts):
+    if not contacts:
         return "No contacts available."
+    else:
+        return "\n".join([f"{name}: {phone}" for name, phone in contacts.items()])
+
+def main():
+    while True:
+        command = input("Enter a command: ").strip().lower().split()
+        
+        if not command:
+            continue
+        
+        if command[0] == "add":
+            if len(command) == 3:
+                print(add_contact(command[1:], contacts))
+            else:
+                print("Enter the argument for the command")
+        elif command[0] == "phone":
+            if len(command) == 2:
+                print(get_contact(command[1:], contacts))
+            else:
+                print("Enter the argument for the command")
+        elif command[0] == "remove":
+            if len(command) == 2:
+                print(remove_contact(command[1:], contacts))
+            else:
+                print("Enter the argument for the command")
+        elif command[0] == "all":
+            print(list_all_contacts(contacts))
+        else:
+            print("Invalid command")
+
+if __name__ == "__main__":
+    main()
