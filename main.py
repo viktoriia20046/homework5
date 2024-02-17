@@ -56,9 +56,24 @@ def input_error(func):
 
     return inner
 
-contacts = {}
+
 
 # Завдання 4
+
+def input_error(func):
+    def inner(*args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        except ValueError:
+            return "Give me name and phone please."
+        except KeyError:
+            return "Invalid command or contact name."
+        except IndexError:
+            return "Invalid number of arguments."
+
+    return inner
+
+contacts = {}
 
 @input_error
 def add_contact(args, contacts):
